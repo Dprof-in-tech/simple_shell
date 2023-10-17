@@ -6,7 +6,7 @@
  * @buffer: to store input
  * @count: to keep track of input digits
  *
- * Return - Always 0 Successful
+ * Return: number of characters read
  */
 
 ssize_t readFile(int file, void *buffer, size_t count)
@@ -18,5 +18,5 @@ ssize_t readFile(int file, void *buffer, size_t count)
 	{
 		perror("read");
 	}
-	return bytesRead;
+	return (bytesRead);
 }

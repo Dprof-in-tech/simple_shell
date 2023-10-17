@@ -1,8 +1,16 @@
 #include "main.h"
 
+/**
+ * is_numeric - Function to check if argument is a number
+ * @str: argument passed
+ *
+ * Return: Always 0 success
+ */
+
 int is_numeric(const char *str)
 {
 	int i;
+
 	if (str == NULL || *str == '\0')
 		return (0);
 
@@ -18,6 +26,7 @@ int is_numeric(const char *str)
 /**
  * handle_exit - Function to handle exit and env command
  * @command: User command
+ * @arguments: argument passed
  *
  * Return: Always successful 0
  */
@@ -25,6 +34,7 @@ int is_numeric(const char *str)
 void handle_exit(char *command, char *arguments[])
 {
 	int exit_code = 0;
+
 	if (command != NULL && arguments[0] != NULL)
 	{
 		if (is_numeric(arguments[0]))

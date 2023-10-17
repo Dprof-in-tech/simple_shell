@@ -3,7 +3,7 @@
 /**
  * handle_path - Function to find the full path of commands
  * @command: input command
- * @argument: Arguments to command
+ * @arguments: Arguments to command
  *
  * Return: Always 0 success
  */
@@ -13,7 +13,6 @@ char *handle_path(char *command, char *arguments[])
 	char *path = getenv("PATH");
 	char *path_token = strsep(&path, ":");
 	char *exe_path;
-
 	bool found_in_current_dir = false;
 
 	if (path == NULL)
@@ -30,7 +29,8 @@ char *handle_path(char *command, char *arguments[])
 			free(command);
 			return (NULL);
 		}
-		snprintf(exe_path, strlen(path_token) + strlen(command) + 2, "%s/%s", path_token, command);
+		snprintf(exe_path, strlen(path_token)
+			+ strlen(command) + 2, "%s/%s", path_token, command);
 
 		if (access(exe_path, X_OK) == 0)
 		{
@@ -44,7 +44,7 @@ char *handle_path(char *command, char *arguments[])
 			found_in_current_dir = true;
 
 	}
-	if (!found_in_current_dir)	
+	if (!found_in_current_dir)
 	{
 		fprintf(stderr, "./hsh: 1: %s: not found\n", command);
 		exit(127);
@@ -56,7 +56,7 @@ char *handle_path(char *command, char *arguments[])
 /**
  * handle_fullshell - Function to handle the full path of commands
  * @exe_path: Full path of user commands
- * @argument: Arguments to the command
+ * @arguments: Arguments to the command
  *
  * Return: Always 0 successful
  */
@@ -65,13 +65,11 @@ void handle_fullshell(char *exe_path, char *arguments[])
 {
 	char **newargv;
 	int arg_count = 0;
-        int status, i;
-        pid_t my_pid1;
+	int status, i;
+	pid_t my_pid1;
 
 	while (arguments[arg_count] != NULL)
-	{
 		arg_count++;
-	}
 	newargv = (char **)malloc((arg_count + 2) * sizeof(char *));
 	if (newargv == NULL)
 	{
@@ -79,30 +77,30 @@ void handle_fullshell(char *exe_path, char *arguments[])
 		exit(EXIT_FAILURE);
 	}
 
-        my_pid1 = fork();
-        if (my_pid1 == 0)
-        {
-                newargv[0] = exe_path;
-		for (i = 0; i < arg_count; i++) {
-                newargv[i + 1] = arguments[i];
-            }
-            newargv[arg_count + 1] = NULL;
-
-                if (execvp(exe_path, newargv) == -1)
-                {
-                        perror(exe_path);
-                        free(newargv);
-                        exit(1);
-                }
-        }
-        else if (my_pid1 < 0)
-        {
-                perror("fork");
+	my_pid1 = fork();
+	if (my_pid1 == 0)
+	{
+		newargv[0] = exe_path;
+		for (i = 0; i < arg_count; i++)
+		{
+			newargv[i + 1] = arguments[i];
+		}
+		newargv[arg_count + 1] = NULL;
+		if (execvp(exe_path, newargv) == -1)
+		{
+			perror(exe_path);
+			free(newargv);
+			exit(1);
+		}
+	}
+	else if (my_pid1 < 0)
+	{
+		perror("fork");
 		free(newargv);
-        }
-        else
-        {
-                waitpid(my_pid1, &status, 0);
-                free(newargv);
-        }
+	}
+	else
+	{
+		waitpid(my_pid1, &status, 0);
+		free(newargv);
+	}
 }

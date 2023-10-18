@@ -9,16 +9,14 @@
 
 int handle_env(char *command)
 {
-	char **env = environ;
+	char **env;
 
 	if (command != NULL)
 	{
-		while (*env)
+		for (env = environ; *env != NULL; env++)
 		{
 			printf("%s\n", *env);
-			env++;
 		}
-		exit(EXIT_SUCCESS);
 	}
 	return (0);
 }

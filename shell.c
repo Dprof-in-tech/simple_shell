@@ -83,7 +83,10 @@ int main(void)
 		if (strcmp(command, "exit") == 0)
 			handle_exit(command, arguments);
 		else if (strcmp(command, "env") == 0)
+		{
 			handle_env(command);
+			return (0);
+		}
 		else if (is_file(command))
 			handle_shell(command, arguments);
 		else if (strcmp(command, "cd") == 0)

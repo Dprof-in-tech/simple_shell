@@ -13,7 +13,7 @@
 #include <sys/stat.h>
 extern char **environ;
 void check(void);
-char *allocate_memory(void);
+void allocate_memory(char **input_line);
 char *tokenizer(char **input_line);
 int is_file(const char *path);
 int is_numeric(const char *str);
@@ -24,5 +24,6 @@ void handle_shell(char *command, char *arguments[]);
 void remove_newline(char *str);
 char *handle_path(char *command, char *arguments[]);
 void handle_fullshell(char *exe_path, char *arguments[]);
+void changeDirectory(char *arguments[]);
 ssize_t readFile(int file, void *buffer, size_t count);
 #endif

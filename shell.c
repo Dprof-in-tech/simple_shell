@@ -2,38 +2,36 @@
 
 /**
  * allocate_memory - Function to allocate memory to store input
+ * @input_line: user input
  *
  * Return: ALways 0 success
  */
 
-char *allocate_memory(void)
+void allocate_memory(char **input_line)
 {
 	ssize_t bytes_read;
 	char buffer[BUFFER_SIZE];
-	char *input_line = NULL;
 
 	bytes_read = read(STDIN_FILENO, buffer, sizeof(buffer));
 	if (bytes_read == 0)
 	{
-		return (NULL);
+		*input_line = NULL;
 	}
 	else if (bytes_read == -1)
 	{
 		perror("read");
-		return (NULL);
+		*input_line = NULL;
 	}
 
-	input_line = (char *)malloc(bytes_read + 1);
-	if (input_line == NULL)
+	*input_line = (char *)malloc(bytes_read + 1);
+	if (*input_line == NULL)
 	{
 		perror("malloc");
-		return (NULL);
+		return;
 	}
 
-	memcpy(input_line, buffer, bytes_read);
-	input_line[bytes_read] = '\0';
-
-	return (input_line);
+	memcpy(*input_line, buffer, bytes_read);
+	(*input_line)[bytes_read] = '\0';
 }
 
 /**
@@ -60,12 +58,12 @@ int main(void)
 {
 	char *input_line = NULL, *token;
 	char *command = NULL, *arguments[MAX_ARGS];
-	int arg_count = 0;
+	int arg_count = 0, error_flag = 0;
 
 	while (1)
 	{
 		check();
-		input_line = allocate_memory();
+		allocate_memory(&input_line);
 		if (input_line == NULL)
 		{
 			break;
@@ -74,7 +72,7 @@ int main(void)
 		command = tokenizer(&input_line);
 		if (command == NULL)
 			continue;
-		while ((token = tokenizer(&input_line)) != NULL)
+		while (!error_flag && (token = tokenizer(&input_line)) != NULL)
 		{
 			if (is_file(token))
 				handle_shell(token, NULL);
@@ -88,6 +86,8 @@ int main(void)
 			handle_env(command);
 		else if (is_file(command))
 			handle_shell(command, arguments);
+		else if (strcmp(command, "cd") == 0)
+			changeDirectory(arguments);
 		else
 			handle_path(command, arguments);
 		free(input_line);

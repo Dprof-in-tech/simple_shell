@@ -13,11 +13,12 @@ int handle_env(char *command)
 
 	if (command != NULL)
 	{
-		while (*env != NULL)
+		while (*env)
 		{
 			printf("%s\n", *env);
 			env++;
 		}
+		exit(EXIT_SUCCESS);
 	}
 	return (0);
 }

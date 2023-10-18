@@ -11,6 +11,11 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
+
+typedef struct {
+    char **environ;
+    int env_changed;
+} info_t;
 extern char **environ;
 void check(void);
 void allocate_memory(char **input_line);
@@ -19,7 +24,7 @@ int is_file(const char *path);
 int is_numeric(const char *str);
 int main(void);
 int cmpstr(const void *b, const void *c);
-void handle_env(char *command);
+void custom_get_environ(info_t *info);
 void handle_exit(char *command, char *arguments[]);
 void handle_shell(char *command, char *arguments[]);
 void remove_newline(char *str);

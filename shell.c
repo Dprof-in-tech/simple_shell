@@ -61,7 +61,9 @@ int main(void)
 	char *input_line = NULL, *token;
 	char *command = NULL, *arguments[MAX_ARGS];
 	int arg_count = 0, error_flag = 0;
+	info_t info;
 
+	info.environ = environ;
 	while (1)
 	{
 		check();
@@ -86,9 +88,7 @@ int main(void)
 		if (strcmp(command, "exit") == 0)
 			handle_exit(command, arguments);
 		else if (strcmp(command, "env") == 0)
-		{
-			handle_env(command);
-		}
+			custom_get_environ(&info);
 		else if (is_file(command))
 			handle_shell(command, arguments);
 		else

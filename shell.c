@@ -22,16 +22,18 @@ void allocate_memory(char **input_line)
 		perror("read");
 		*input_line = NULL;
 	}
-
-	*input_line = (char *)malloc(bytes_read + 1);
-	if (*input_line == NULL)
+	else if (bytes_read > 0)
 	{
-		perror("malloc");
-		return;
-	}
+		*input_line = (char *)malloc(bytes_read + 1);
+		if (*input_line == NULL)
+		{
+			perror("malloc");
+			return;
+		}
 
-	memcpy(*input_line, buffer, bytes_read);
-	(*input_line)[bytes_read] = '\0';
+		memcpy(*input_line, buffer, bytes_read);
+		(*input_line)[bytes_read] = '\0';
+	}
 }
 
 /**
@@ -67,6 +69,7 @@ int main(void)
 		if (input_line == NULL)
 		{
 			break;
+			free(input_line);
 		}
 		arg_count = 0;
 		command = tokenizer(&input_line);
@@ -85,14 +88,13 @@ int main(void)
 		else if (strcmp(command, "env") == 0)
 		{
 			handle_env(command);
-			return (0);
 		}
 		else if (is_file(command))
 			handle_shell(command, arguments);
-		else if (strcmp(command, "cd") == 0)
-			changeDirectory(arguments);
 		else
 			handle_path(command, arguments);
+		if (!isatty(STDIN_FILENO))
+			break;
 		free(input_line);
 	}
 	return (0);

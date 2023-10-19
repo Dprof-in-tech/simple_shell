@@ -37,6 +37,19 @@ void allocate_memory(char **input_line)
 }
 
 /**
+ * free_memory - Function to free memory
+ * @input_line: memory to free
+ *
+ * Return: Always 0 successful
+ */
+
+void free_memory(char *input_line)
+{
+	if (input_line != NULL)
+		free(input_line);
+}
+
+/**
  * is_file - Function to check if command exists
  * @path: command
  *
@@ -69,9 +82,7 @@ int main(void)
 		check();
 		allocate_memory(&input_line);
 		if (input_line == NULL)
-		{
 			break;
-		}
 		arg_count = 0;
 		command = tokenizer(&input_line);
 		if (command == NULL)
@@ -96,6 +107,7 @@ int main(void)
 		{
 			break;
 		}
+		free_memory(input_line);
 	}
 	return (0);
 }

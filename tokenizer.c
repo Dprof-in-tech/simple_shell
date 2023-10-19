@@ -19,7 +19,6 @@ char *tokenizer(char **input_line)
 
 		if (*input_line == NULL || **input_line == '\0')
 			return (NULL);
-
 	}
 
 	return (NULL);

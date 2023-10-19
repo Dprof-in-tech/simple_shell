@@ -12,9 +12,16 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 
-typedef struct {
-    char **environ;
-    int env_changed;
+/**
+ * struct info_t - Structure to store linked list
+ * @environ: first member
+ * @env_changed: second member
+ */
+
+typedef struct info_t
+{
+	char **environ;
+	int env_changed;
 } info_t;
 extern char **environ;
 void check(void);

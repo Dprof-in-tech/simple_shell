@@ -58,7 +58,7 @@ int is_file(const char *path)
 
 int main(void)
 {
-	char *input_line = NULL, *token;
+	char *token, *input_line = NULL;
 	char *command = NULL, *arguments[MAX_ARGS];
 	int arg_count = 0, error_flag = 0;
 	info_t info;
@@ -71,7 +71,6 @@ int main(void)
 		if (input_line == NULL)
 		{
 			break;
-			free(input_line);
 		}
 		arg_count = 0;
 		command = tokenizer(&input_line);
@@ -94,8 +93,9 @@ int main(void)
 		else
 			handle_path(command, arguments);
 		if (!isatty(STDIN_FILENO))
+		{
 			break;
-		free(input_line);
+		}
 	}
 	return (0);
 }

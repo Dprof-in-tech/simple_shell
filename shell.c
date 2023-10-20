@@ -9,31 +9,7 @@
 
 void allocate_memory(char **input_line)
 {
-	ssize_t bytes_read;
-	char buffer[BUFFER_SIZE];
-
-	bytes_read = read(STDIN_FILENO, buffer, sizeof(buffer));
-	if (bytes_read == 0)
-	{
-		*input_line = NULL;
-	}
-	else if (bytes_read == -1)
-	{
-		perror("read");
-		*input_line = NULL;
-	}
-	else if (bytes_read > 0)
-	{
-		*input_line = (char *)malloc(bytes_read + 1);
-		if (*input_line == NULL)
-		{
-			perror("malloc");
-			return;
-		}
-
-		memcpy(*input_line, buffer, bytes_read);
-		(*input_line)[bytes_read] = '\0';
-	}
+	printf("%s\n", *input_line);
 }
 
 /**
@@ -71,7 +47,8 @@ int is_file(const char *path)
 
 int main(void)
 {
-	char *token, *input_line = NULL;
+	char *token, *input_line = NULL, *input_copy = NULL;
+	size_t len = 0;
 	char *command = NULL, *arguments[MAX_ARGS];
 	int arg_count = 0, error_flag = 0;
 	info_t info;
@@ -80,14 +57,14 @@ int main(void)
 	while (1)
 	{
 		check();
-		allocate_memory(&input_line);
-		if (input_line == NULL)
+		if (getline(&input_line, &len, stdin) == -1)
 			break;
 		arg_count = 0;
-		command = tokenizer(&input_line);
+		input_copy = strdup(input_line);
+		command = tokenizer(&input_copy);
 		if (command == NULL)
 			continue;
-		while (!error_flag && (token = tokenizer(&input_line)) != NULL)
+		while (!error_flag && (token = tokenizer(&input_copy)) != NULL)
 		{
 			if (is_file(token))
 				handle_shell(token, NULL);
@@ -103,11 +80,11 @@ int main(void)
 			handle_shell(command, arguments);
 		else
 			handle_path(command, arguments);
-		if (!isatty(STDIN_FILENO))
-		{
-			break;
-		}
-		free_memory(input_line);
+
+		free(input_copy);
+		free(input_line);
 	}
+	free_memory(input_copy);
+	free(command);
 	return (0);
 }

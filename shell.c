@@ -1,15 +1,26 @@
 #include "main.h"
 
 /**
- * allocate_memory - Function to allocate memory to store input
- * @input_line: user input
+ * process-command - Function to allocate memory to store input
+ * @command: user input
+ * @arguments:  command arguments
+ * @info: exit info
  *
  * Return: ALways 0 success
  */
 
-void allocate_memory(char **input_line)
+void process_command(char *command, char *arguments[], info_t *info)
 {
-	printf("%s\n", *input_line);
+	if (strcmp(command, "exit") == 0)
+		handle_exit(command, arguments);
+	else if (strcmp(command, "env") == 0)
+		custom_get_environ(info);
+	else if (is_file(command))
+		handle_shell(command, arguments);
+	else if (strcmp(command, "cd") == 0)
+		changeDirectory(arguments);
+	else
+		handle_path(command, arguments);
 }
 
 /**
@@ -72,14 +83,7 @@ int main(void)
 				arguments[arg_count++] = token;
 		}
 		arguments[arg_count] = NULL;
-		if (strcmp(command, "exit") == 0)
-			handle_exit(command, arguments);
-		else if (strcmp(command, "env") == 0)
-			custom_get_environ(&info);
-		else if (is_file(command))
-			handle_shell(command, arguments);
-		else
-			handle_path(command, arguments);
+		process_command(command, arguments, &info);
 
 		free(input_copy);
 		free(input_line);

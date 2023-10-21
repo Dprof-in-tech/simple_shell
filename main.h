@@ -25,7 +25,7 @@ typedef struct info_t
 } info_t;
 extern char **environ;
 void check(void);
-void allocate_memory(char **input_line);
+void process_command(char *command, char *arguments[], info_t *info);
 void free_memory(char *input_line);
 char *tokenizer(char **input_line);
 int is_file(const char *path);

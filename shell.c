@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * process-command - Function to allocate memory to store input
+ * process_command - Function to allocate memory to store input
  * @command: user input
  * @arguments:  command arguments
  * @info: exit info
@@ -25,15 +25,17 @@ void process_command(char *command, char *arguments[], info_t *info)
 
 /**
  * free_memory - Function to free memory
- * @input_line: memory to free
+ * @arguments: memory to clean
  *
  * Return: Always 0 successful
  */
 
-void free_memory(char *input_line)
+void free_memory(char *arguments[])
 {
-	if (input_line != NULL)
-		free(input_line);
+	int i;
+
+	for (i = 0; arguments[i] != NULL; i++)
+		free(arguments[i]);
 }
 
 /**
@@ -88,7 +90,7 @@ int main(void)
 		free(input_copy);
 		free(input_line);
 	}
-	free_memory(input_copy);
+	free(input_copy);
 	free(command);
 	return (0);
 }
